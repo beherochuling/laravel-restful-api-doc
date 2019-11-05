@@ -1,18 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: white
- * Date: 7/13/18
- * Time: 10:24 AM
- */
-
 namespace OlderW\RestfulDoc;
 
-
-class DocParser
-{
-    public static  function getMethodDocForClass($class)
-    {//echo $class."<br>\n";
+class DocParser {
+    public static function getMethodDocForClass($class) {
         $method_doc = [];
         $class = new \ReflectionClass($class);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -30,11 +20,8 @@ class DocParser
                 'validate',
                 'validateWithBag',
                 'test',
-            ]))
-            {
-                continue;
-            }
-            //echo $method;
+            ])) continue;
+        
             $doc = $method->getDocComment();
             if (!$doc) {
                 die("{$method->getDeclaringClass()->getName()}::{$method->getName()}() 没有写注释\n");
@@ -48,20 +35,16 @@ class DocParser
                     die("{$method->getDeclaringClass()->getName()}::{$method->getName()}() 缺少 @{$key} 注释\n");
                 }
             }
-            if (isset($doc['throws']))
-            {
-                foreach (explode("\n",$doc['throws'] ) as $error)
-                {
+            if (isset($doc['throws'])) {
+                foreach (explode("\n",$doc['throws'] ) as $error) {
                     $error = trim($error);
                     $error = trim($error,';');
-                    if (!$error)
-                    {
+                    if (!$error) {
                         continue;
                     }
                     $ex_class = '\App\Exceptions\\'.$error;
                     $ex = new $ex_class();
-                    if ($ex instanceof  Exception)
-                    {
+                    if ($ex instanceof  Exception) {
                         $code   = $ex->getCode();
                         $msg   = $ex->getMessage();
                         $doc['errors'][]= [
@@ -72,31 +55,19 @@ class DocParser
 
                 }
             }
-            if (0)
-            {
-                if( isset($method_doc['version']) && $doc['version'] == DOC_VERSION)
-                {
+            if (0) {
+                if( isset($method_doc['version']) && $doc['version'] == DOC_VERSION) {
                     $method_doc[$method->getName()] = $doc;
                     //$versionFilter = 1;
                 }
-            }
-            else{
+            } else{
                 $method_doc[$method->getName()] = $doc;
             }
-
-
         }
-//        if (DOC_VERSION )
-//        {
-//            return null;
-//        }
 
         return $method_doc;
     }
-
-
-    public static function get_classes_commentdoc($class)
-    {
+    public static function get_classes_commentdoc($class) {
         $class = new \ReflectionClass($class);
 
         if ($class->isAbstract()) {
@@ -109,8 +80,7 @@ class DocParser
 
         return $class_doc;
     }
-    public static function get_class_const_commentdoc($class)
-    {
+    public static function get_class_const_commentdoc($class) {
         $class = new \ReflectionClass($class);
 
         if ($class->isAbstract()) {
@@ -175,11 +145,9 @@ class DocParser
      *
      * @return array
      */
-    public static function trim_commentdoc($doc)
-    {
-        if (!$doc) {
-            return [];
-        }
+    public static function trim_commentdoc($doc) {
+        if (!$doc) return [];
+
         $result = [];
         $lines = preg_split('/\r|\n|\r\n/', $doc);
         foreach ($lines as $line) {
@@ -188,6 +156,7 @@ class DocParser
                 $result[] = '';
                 continue;
             }
+
             if (preg_match('#^/\*+$#', $line)) {
                 continue;
             } elseif (preg_match('#^\*+/$#', $line)) {

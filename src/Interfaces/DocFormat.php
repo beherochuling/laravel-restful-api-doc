@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: white
- * Date: 7/16/18
- * Time: 9:26 AM
- */
 namespace OlderW\RestfulDoc\Interfaces;
 
-interface DocFormat
-{
+interface DocFormat {
     /**
      * @param array $docs
      * @return string
